@@ -68,6 +68,14 @@ def contain(command, image_name, image_dir, container_id, container_dir):
     # (https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
     # Make / a private mount to avoid littering our host mount table.
 
+    linux.unshare(linux.CLONE_NEWNS)
+    linux.mount(
+        '/', 
+        os.path.join(new_root, '/'), 
+        '/', 
+        linux.MS_PRIVATE | linux.MS_REC, 
+        '')
+
     # Create mounts (/proc, /sys, /dev) under new_root
     linux.mount('proc', os.path.join(new_root, 'proc'), 'proc', 0, '')
     linux.mount('sysfs', os.path.join(new_root, 'sys'), 'sysfs', 0, '')

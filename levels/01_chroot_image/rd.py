@@ -78,6 +78,10 @@ def contain(command, image_name, image_dir, container_id, container_dir):
     # TODO: chroot into new_root
     # TODO: something after chrooting? (HINT: try running: sudo python rd.py run -i ubuntu -- /bin/sh)
 
+    new_root = create_container_root(
+        'ubuntu', '/workshop/images', container_id, container_dir)
+    linux.mount('proc', os.path.join(new_root, 'proc'), 'proc', 0, '')
+    os.chroot(new_root)
     os.execvp(command[0], command)
 
 
